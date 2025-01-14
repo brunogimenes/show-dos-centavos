@@ -1,8 +1,6 @@
 type ButtonProps = {
-    children: React.ReactNode;
-    onClick?: () => void;
     variant?: 'primary' | 'secondary';
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button = (props: ButtonProps) => {
     const { variant = 'primary' } = props;

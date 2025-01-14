@@ -6,7 +6,8 @@ import { QuestionModel } from './models/question.model'
 import classNames from 'classnames'
 import mockedQuestions from './models/mocked-questions'
 import { useNavigate } from 'react-router'
-import { getRandomQuestions } from './utils/get-random-questions'
+import { getRandomQuestionByDifficulty, getRandomQuestions } from './utils/get-random-questions'
+import { gameConstants } from '../config/game-constants'
 
 export const GamePage = () => {
 
@@ -15,6 +16,7 @@ export const GamePage = () => {
     const [questions, setQuestions] = useState<QuestionModel[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [skipCount, setSkipCount] = useState(gameConstants.skipCount)
 
     useEffect(() => {
         const randomQuestions = getRandomQuestions(mockedQuestions);
@@ -58,6 +60,29 @@ export const GamePage = () => {
         }
     }
 
+    const onSkip = () => {
+
+        if (skipCount <= 0) {
+            return;
+        }
+
+        // Pega a dificuldade aatual
+        const currentDifficulty = questions[currentIndex].difficulty;
+
+        // Buscamos o indice original dessa pergunta
+        const mockedQuestionIndex = mockedQuestions.indexOf(questions[currentIndex]);
+        const mockedQuestionsWithoutCurrent = [...mockedQuestions];
+        mockedQuestionsWithoutCurrent.splice(mockedQuestionIndex, 1);
+
+        // Buscamos uma nova pergunta aleatória da mesma dificuldade
+        const newQuestion = getRandomQuestionByDifficulty(mockedQuestionsWithoutCurrent, currentDifficulty);
+        const newArray = [...questions];
+        newArray[currentIndex] = newQuestion;
+        setQuestions(newArray);
+
+        setSkipCount(skipCount - 1);
+    }
+
     if (!currentQuestion) {
         return <div>Carregandooo</div>
     }
@@ -93,9 +118,11 @@ export const GamePage = () => {
                 })}
             </div>
             <div className="flex justify-around w-full">
-                {/* <Button variant='secondary'>
-                    Pular
-                </Button> */}
+                <Button variant='secondary' onClick={onSkip} disabled={skipCount <= 0} style={{
+                    opacity: skipCount <= 0 ? 0.5 : 1
+                }}>
+                    Pular x {skipCount}
+                </Button>
                 <Button onClick={onAnswer}>
                     Responder
                 </Button>
