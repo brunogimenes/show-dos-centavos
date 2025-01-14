@@ -1,10 +1,10 @@
 
-export type Difficulties = 'easy' | 'medium' | 'hard';
 
 export type QuestionModel = {
     question: string;
     answers: string[];
     correctAnswerIndex: number;
-    difficulty: Difficulties;
+    // from 1 to 10
+    difficulty: number;
 }
 

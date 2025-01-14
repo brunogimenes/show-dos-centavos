@@ -6,6 +6,7 @@ import { QuestionModel } from './models/question.model'
 import classNames from 'classnames'
 import mockedQuestions from './models/mocked-questions'
 import { useNavigate } from 'react-router'
+import { getRandomQuestions } from './utils/get-random-questions'
 
 export const GamePage = () => {
 
@@ -16,8 +17,8 @@ export const GamePage = () => {
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
     useEffect(() => {
-        // Aqui sera a logica de obter as perguntas aleatoriamente
-        setQuestions(mockedQuestions);
+        const randomQuestions = getRandomQuestions(mockedQuestions);
+        setQuestions(randomQuestions);
     }, []);
 
     const currentQuestion = questions[currentIndex];
@@ -63,9 +64,9 @@ export const GamePage = () => {
 
     return <Screen>
         <div className="flex flex-col h-full items-center">
-            {/* <div className="text-xs font-bold bg-gray-200  p-2 rounded-full">
-                Valendo 10 centavos
-            </div> */}
+            <div className="text-xs font-bold bg-gray-200  p-2 rounded-full">
+                Valendo {currentQuestion.difficulty * 10} centavos
+            </div>
             <div className="font-bold mt-3">
                 {currentQuestion.question}
             </div>
