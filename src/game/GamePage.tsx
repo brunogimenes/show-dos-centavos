@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { Button } from '../shared/components/Button'
-import { Screen } from '../shared/components/Screen'
+import { ScreenLayout } from '../shared/components/ScreenLayout'
 import { QuestionModel } from './models/question.model'
 import classNames from 'classnames'
 import mockedQuestions from './models/mocked-questions'
@@ -25,12 +25,7 @@ export const GamePage = () => {
 
     const currentQuestion = questions[currentIndex];
 
-    const onWin = () => {
-        alert('Parabéns, você ganhou 10 centavos');
-        // navigate('/', {
-        //     replace: true
-        // });
-    }
+
 
     const onCorrectAnswer = () => {
         console.log('Acertou');
@@ -44,6 +39,24 @@ export const GamePage = () => {
         setSelectedAnswer(null);
     }
 
+    const onWin = () => {
+        navigate('/game-over', {
+            replace: true,
+            state: {
+                amount: currentQuestion.difficulty * 10
+            }
+        });
+    }
+
+    const onLose = () => {
+        navigate('/game-over', {
+            replace: true,
+            state: {
+                amount: currentQuestion.difficulty * 10
+            }
+        });
+    }
+
     const onAnswer = () => {
         if (!currentQuestion || selectedAnswer === null) {
             console.log('porrraaaa', currentQuestion, selectedAnswer);
@@ -52,11 +65,7 @@ export const GamePage = () => {
         if (selectedAnswer === currentQuestion.correctAnswerIndex) {
             onCorrectAnswer();
         } else {
-            console.log('Errou');
-            alert('Que burro, dá zero pra ele!');
-            navigate('/', {
-                replace: true
-            });
+            onLose();
         }
     }
 
@@ -87,7 +96,7 @@ export const GamePage = () => {
         return <div>Carregandooo</div>
     }
 
-    return <Screen>
+    return <ScreenLayout>
         <div className="flex flex-col h-full items-center">
             <div className="text-xs font-bold bg-gray-200  p-2 rounded-full">
                 Valendo {currentQuestion.difficulty * 10} centavos
@@ -128,5 +137,5 @@ export const GamePage = () => {
                 </Button>
             </div>
         </div>
-    </Screen>
+    </ScreenLayout>
 }
